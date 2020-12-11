@@ -17,11 +17,24 @@ namespace PersonalAgenda
         {
             InitializeComponent();
         }
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            listView.ItemsSource = await App.Database.GetNotesAsync();
+        async void OnSaveButtonClicked(object sender, EventArgs e)
+        { 
+            var activity = (Activity)BindingContext; 
+            await App.Database.SaveActivityAsync(activity);
+            listView.ItemsSource = await App.Database.GetActivitiesAsync();
         }
+        async void OnDeleteButtonClicked(object sender, EventArgs e) 
+        { 
+            var activity = (Activity)BindingContext; 
+            await App.Database.DeleteActivityAsync(activity); 
+            listView.ItemsSource = await App.Database.GetActivitiesAsync();
+        }
+        protected override async void OnAppearing() 
+        { 
+            base.OnAppearing(); 
+            listView.ItemsSource = await App.Database.GetActivitiesAsync(); 
+        }
+     
         async void OnNoteAddedClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new NotePage
